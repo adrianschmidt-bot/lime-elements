@@ -406,6 +406,7 @@ export namespace Components {
         "value": LabelValue;
     }
     export interface LimelEmailViewer {
+        "attachments"?: EmailAttachment[];
         "bodyHtml"?: string;
         "bodyText"?: string;
         "cc"?: string;
@@ -984,6 +985,13 @@ export type EditorTextLink = {
 // @beta (undocumented)
 export type EditorUiType = 'standard' | 'minimal' | 'no-toolbar';
 
+// @public
+export interface EmailAttachment {
+    filename?: string;
+    mimeType?: string;
+    size?: number;
+}
+
 // Warning: (ae-missing-release-tag) "EventEmitter" is part of the package's API, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //
 // @public (undocumented)
@@ -1011,7 +1019,7 @@ export interface FileInfo {
 }
 
 // @public (undocumented)
-export type FileType = 'pdf' | 'image' | 'video' | 'audio' | 'text' | 'office' | 'unknown';
+export type FileType = 'pdf' | 'image' | 'video' | 'audio' | 'text' | 'email' | 'office' | 'unknown';
 
 // @public (undocumented)
 export type FlexContainerAlign = 'start' | 'end' | 'center' | 'stretch';
@@ -1649,6 +1657,7 @@ export namespace JSX {
         "value"?: LabelValue;
     }
     export interface LimelEmailViewer {
+        "attachments"?: EmailAttachment[];
         "bodyHtml"?: string;
         "bodyText"?: string;
         "cc"?: string;

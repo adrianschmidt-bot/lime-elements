@@ -1,6 +1,8 @@
-import { Component, Prop, h } from '@stencil/core';
+import { Component, Host, Prop, h } from '@stencil/core';
 import translate from '../../global/translations';
 import { Languages } from '../date-picker/date.types';
+import { EmailAttachment } from '../../util/email';
+import { formatBytes } from '../../util/format-bytes';
 
 /**
  * This is a private component, used to render `.eml` files inside
@@ -74,6 +76,12 @@ export class EmailViewer {
     public bodyText?: string;
 
     /**
+     * List of non-inline attachments.
+     */
+    @Prop()
+    public attachments?: EmailAttachment[];
+
+    /**
      * Optional URL to render as a final fallback using an `<object type="text/plain">`.
      */
     @Prop({ reflect: true })
@@ -87,10 +95,15 @@ export class EmailViewer {
 
     public render() {
         return (
-            <div class="email" part="email">
-                {this.renderHeaders()}
-                {this.renderBody()}
-            </div>
+            <Host>
+                <div class="email" part="email">
+                    {this.renderHeaders()}
+                    <section>
+                        {this.renderAttachments()}
+                        {this.renderBody()}
+                    </section>
+                </div>
+            </Host>
         );
     }
 
@@ -166,8 +179,8 @@ export class EmailViewer {
         return (
             <dl class={`headers ${type}`}>
                 <dt>{label}</dt>
-                {values.map((v) => (
-                    <dd>{v}</dd>
+                {values.map((headerValue, index) => (
+                    <dd key={`${type}-${index}`}>{headerValue}</dd>
                 ))}
             </dl>
         );
@@ -182,6 +195,45 @@ export class EmailViewer {
         }
 
         return [value];
+    }
+
+    private renderAttachments() {
+        if (!this.attachments || this.attachments.length === 0) {
+            return;
+        }
+
+        const label = this.getTranslation('file-viewer.email.attachments');
+
+        return (
+            <div class="attachments">
+                <span>{label}</span>
+                <ul>
+                    {this.attachments.map((attachment, index) => (
+                        <li key={`attachment-${index}`}>
+                            <span class="attachment-filename">
+                                {attachment.filename?.trim() ||
+                                    this.getTranslation(
+                                        'file-viewer.email.attachment.unnamed'
+                                    )}
+                            </span>
+                            <span class="attachment-mime-type">
+                                {attachment.mimeType?.trim()}
+                            </span>
+                            {this.renderSizeBadge(attachment.size)}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
+
+    private renderSizeBadge(size: number) {
+        if (typeof size !== 'number') {
+            return;
+        }
+        return (
+            <limel-badge class="attachment-size" label={formatBytes(size)} />
+        );
     }
 
     private getTranslation(key: string) {

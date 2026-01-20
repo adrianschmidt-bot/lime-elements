@@ -1,0 +1,87 @@
+:host(limel-email-viewer) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+}
+
+.email {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem 0;
+    box-shadow: var(--shadow-depth-8);
+}
+
+.email-headers {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px dashed rgba(var(--contrast-700));
+
+    dl {
+        all: unset;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 0.5rem;
+        padding: 0.5rem 0.75rem;
+
+        &:nth-child(even) {
+            background-color: rgb(var(--contrast-800), 0.1);
+        }
+
+        dt {
+            all: unset;
+            font-size: var(--limel-theme-small-font-size);
+            opacity: 0.6;
+            min-width: 3rem;
+
+            &:after {
+                content: ':';
+            }
+        }
+        dd {
+            all: unset;
+            font-size: var(--limel-theme-small-font-size);
+            &:not(:last-child) {
+                &:after {
+                    content: ',';
+                    opacity: 0.6;
+                }
+            }
+        }
+
+        &.subject {
+            dd {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.body {
+    flex-grow: 1;
+    max-width: 100%;
+    min-height: 2rem;
+    overflow-y: auto;
+    padding: 0.75rem;
+
+    &.plain-text {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        margin: 0;
+        font-family: inherit;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+}

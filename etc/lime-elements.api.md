@@ -405,6 +405,17 @@ export namespace Components {
         "labels": Label[];
         "value": LabelValue;
     }
+    export interface LimelEmailViewer {
+        "bodyHtml"?: string;
+        "bodyText"?: string;
+        "cc"?: string;
+        "date"?: string;
+        "fallbackUrl"?: string;
+        "from"?: string;
+        "language": Languages;
+        "subject"?: string;
+        "to"?: string;
+    }
     export interface LimelFile {
         "accept": string;
         "disabled": boolean;
@@ -1247,6 +1258,8 @@ export namespace JSX {
         // (undocumented)
         "limel-dynamic-label": LimelDynamicLabel;
         // (undocumented)
+        "limel-email-viewer": LimelEmailViewer;
+        // (undocumented)
         "limel-file": LimelFile;
         // (undocumented)
         "limel-file-dropzone": LimelFileDropzone;
@@ -1634,6 +1647,17 @@ export namespace JSX {
         "defaultLabel"?: Omit<Label, 'value'>;
         "labels"?: Label[];
         "value"?: LabelValue;
+    }
+    export interface LimelEmailViewer {
+        "bodyHtml"?: string;
+        "bodyText"?: string;
+        "cc"?: string;
+        "date"?: string;
+        "fallbackUrl"?: string;
+        "from"?: string;
+        "language"?: Languages;
+        "subject"?: string;
+        "to"?: string;
     }
     export interface LimelFile {
         "accept"?: string;

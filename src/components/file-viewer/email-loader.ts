@@ -35,7 +35,7 @@ export async function loadEmail(url: string): Promise<Email> {
         parsedEmail.attachments = attachments;
     }
 
-    applyBody(parsedEmail, email, cidUrlById);
+    await applyBody(parsedEmail, email, cidUrlById);
 
     return parsedEmail;
 }
@@ -111,14 +111,18 @@ function extractAttachments(email: any): {
     return { attachments, cidUrlById };
 }
 
-function applyBody(
+async function applyBody(
     parsedEmail: Email,
     email: any,
     cidUrlById: Map<string, string>
 ) {
     const html = (email.html || '').trim();
     if (html) {
-        parsedEmail.bodyHtml = replaceCidReferences(html, cidUrlById);
+        const withCidsResolved = replaceCidReferences(html, cidUrlById);
+        const { sanitizeEmailHTML } = await import(
+            '../../util/sanitize-email-html'
+        );
+        parsedEmail.bodyHtml = await sanitizeEmailHTML(withCidsResolved);
         return;
     }
 

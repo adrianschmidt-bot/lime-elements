@@ -48,6 +48,14 @@ export default {
     'file-viewer.email.date': 'Date',
     'file-viewer.email.attachments': 'Attachments',
     'file-viewer.email.attachment.unnamed': 'Unnamed attachment',
+    'file-viewer.email.remote-images.warning':
+        "Images aren't loaded to protect your privacy.",
+    'file-viewer.email.remote-images.warning.description': `Many emails include images hosted on external servers.
+When images are loaded, your device requests them from the sender’s server.
+This may reveal to the sender that you opened the message, when you opened it, and metadata such as your IP address and device/browser information.
+
+You can keep images blocked (the email may look incomplete), or load them if you trust the sender.`,
+    'file-viewer.email.remote-images.load': 'Load images',
     'editor-menu.bold': 'Bold',
     'editor-menu.italic': 'Italic',
     'editor-menu.strikethrough': 'Strikethrough',

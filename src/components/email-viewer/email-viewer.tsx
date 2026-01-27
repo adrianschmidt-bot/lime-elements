@@ -1,4 +1,13 @@
-import { Component, Host, Prop, h } from '@stencil/core';
+import {
+    Component,
+    Event,
+    EventEmitter,
+    Prop,
+    State,
+    Watch,
+    h,
+    Host,
+} from '@stencil/core';
 import translate from '../../global/translations';
 import { Languages } from '../date-picker/date.types';
 import { EmailAttachment } from '../../util/email';
@@ -93,11 +102,38 @@ export class EmailViewer {
     @Prop({ reflect: true })
     public language: Languages = 'en';
 
+    /**
+     * Controls whether remote images (http/https) are loaded.
+     *
+     * If omitted, the component treats this as a per-email setting.
+     * Consumers that want to remember the choice (per session/global) can
+     * provide this prop and listen for `allowRemoteImagesChange`.
+     */
+    @Prop()
+    public allowRemoteImages?: boolean;
+
+    @State()
+    private allowRemoteImagesState = false;
+
+    /**
+     * Emitted when the user requests remote images to be loaded.
+     */
+    @Event()
+    public allowRemoteImagesChange: EventEmitter<boolean>;
+
+    @Watch('bodyHtml')
+    public onBodyHtmlChange() {
+        if (this.allowRemoteImages === undefined) {
+            this.allowRemoteImagesState = false;
+        }
+    }
+
     public render() {
         return (
             <Host>
                 <div class="email" part="email">
                     {this.renderHeaders()}
+                    {this.renderRemoteImageBanner()}
                     <section>
                         {this.renderAttachments()}
                         {this.renderBody()}
@@ -141,9 +177,12 @@ export class EmailViewer {
 
     private renderBody() {
         if (this.bodyHtml) {
-            return (
-                <div class="body" innerHTML={this.bodyHtml} part="email-body" />
+            const bodyHtml = applyRemoteImagesPolicy(
+                this.bodyHtml,
+                this.getAllowRemoteImages()
             );
+
+            return <div class="body" innerHTML={bodyHtml} part="email-body" />;
         }
 
         if (this.bodyText) {
@@ -239,6 +278,104 @@ export class EmailViewer {
     private getTranslation(key: string) {
         return translate.get(key, this.language);
     }
+
+    private shouldShowRemoteImagesBanner(): boolean {
+        return Boolean(
+            this.bodyHtml &&
+                containsRemoteImages(this.bodyHtml) &&
+                !this.getAllowRemoteImages()
+        );
+    }
+
+    private renderRemoteImageBanner() {
+        if (!this.shouldShowRemoteImagesBanner()) {
+            return;
+        }
+        const icon = {
+            name: 'warning_shield',
+            color: 'rgb(var(--color-orange-default))',
+        };
+        const heading = this.getTranslation(
+            'file-viewer.email.remote-images.warning'
+        );
+        const description = this.getTranslation(
+            'file-viewer.email.remote-images.warning.description'
+        );
+        const buttonLabel = this.getTranslation(
+            'file-viewer.email.remote-images.load'
+        );
+
+        return (
+            <limel-collapsible-section
+                header={heading}
+                icon={icon}
+                language={this.language}
+            >
+                <button
+                    class="load-images"
+                    slot="header"
+                    onClick={this.onEnableRemoteImagesClick}
+                >
+                    {buttonLabel}
+                </button>
+                <limel-markdown value={description} />
+            </limel-collapsible-section>
+        );
+    }
+
+    private onEnableRemoteImagesClick = (event?: Event) => {
+        event?.stopPropagation?.();
+        this.enableRemoteImages();
+    };
+
+    private enableRemoteImages = () => {
+        if (this.allowRemoteImages !== undefined) {
+            this.allowRemoteImagesChange.emit(true);
+            return;
+        }
+
+        this.allowRemoteImagesState = true;
+    };
+
+    private getAllowRemoteImages(): boolean {
+        return this.allowRemoteImages ?? this.allowRemoteImagesState;
+    }
+}
+
+function containsRemoteImages(html: string): boolean {
+    return html.includes('data-remote-src');
+}
+
+function applyRemoteImagesPolicy(html: string, allowRemoteImages: boolean) {
+    if (!allowRemoteImages) {
+        return html;
+    }
+
+    const parser = new DOMParser();
+    const document = parser.parseFromString(html, 'text/html');
+
+    const images = document.querySelectorAll(
+        'img[data-remote-src]'
+    ) as NodeListOf<HTMLImageElement>;
+
+    for (const image of images) {
+        const remoteSrc = image.dataset.remoteSrc;
+        if (!remoteSrc || !isAllowedRemoteImageUrl(remoteSrc)) {
+            delete image.dataset.remoteSrc;
+            continue;
+        }
+
+        image.setAttribute('src', remoteSrc);
+        delete image.dataset.remoteSrc;
+    }
+
+    return document.body.innerHTML;
+}
+
+function isAllowedRemoteImageUrl(url: string): boolean {
+    const trimmed = url.trim();
+    const lower = trimmed.toLowerCase();
+    return lower.startsWith('https://') || lower.startsWith('http://');
 }
 
 interface AddressListSplitState {

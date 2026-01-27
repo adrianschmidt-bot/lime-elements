@@ -49,6 +49,14 @@ export default {
     'file-viewer.email.date': 'Dato',
     'file-viewer.email.attachments': 'Vedhæftninger',
     'file-viewer.email.attachment.unnamed': 'Vedhæftning uden navn',
+    'file-viewer.email.remote-images.warning':
+        'Billeder indlæses ikke for at beskytte dit privatliv.',
+    'file-viewer.email.remote-images.warning.description': `Mange e-mails indeholder billeder, der hostes på eksterne servere.
+Når billeder indlæses, anmoder din enhed dem fra afsenderens server.
+Det kan afsløre for afsenderen, at du har åbnet beskeden, hvornår du åbnede den, samt metadata såsom din IP-adresse og oplysninger om enhed/browser.
+
+Du kan fortsætte med at blokere billeder (e-mailen kan se ufuldstændig ud) eller indlæse dem, hvis du stoler på afsenderen.`,
+    'file-viewer.email.remote-images.load': 'Indlæs billeder',
     'editor-menu.bold': 'Fed',
     'editor-menu.italic': 'Kursiv',
     'editor-menu.strikethrough': 'Gennemstreget',

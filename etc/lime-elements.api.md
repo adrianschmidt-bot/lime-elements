@@ -406,6 +406,7 @@ export namespace Components {
         "value": LabelValue;
     }
     export interface LimelEmailViewer {
+        "allowRemoteImages"?: boolean;
         "attachments"?: EmailAttachment[];
         "bodyHtml"?: string;
         "bodyText"?: string;
@@ -1657,6 +1658,7 @@ export namespace JSX {
         "value"?: LabelValue;
     }
     export interface LimelEmailViewer {
+        "allowRemoteImages"?: boolean;
         "attachments"?: EmailAttachment[];
         "bodyHtml"?: string;
         "bodyText"?: string;
@@ -1665,6 +1667,7 @@ export namespace JSX {
         "fallbackUrl"?: string;
         "from"?: string;
         "language"?: Languages;
+        "onAllowRemoteImagesChange"?: (event: LimelEmailViewerCustomEvent<boolean>) => void;
         "subject"?: string;
         "to"?: string;
     }
@@ -2390,6 +2393,16 @@ export interface LimelDockCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     // (undocumented)
     target: HTMLLimelDockElement;
+}
+
+// Warning: (ae-missing-release-tag) "LimelEmailViewerCustomEvent" is part of the package's API, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export interface LimelEmailViewerCustomEvent<T> extends CustomEvent<T> {
+    // (undocumented)
+    detail: T;
+    // (undocumented)
+    target: HTMLLimelEmailViewerElement;
 }
 
 // Warning: (ae-missing-release-tag) "LimelFileCustomEvent" is part of the package's API, but it is missing a release tag (@alpha, @beta, @public, or @internal)

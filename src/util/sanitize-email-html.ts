@@ -49,7 +49,7 @@ function getEmailSanitizationSchema(): Schema {
             ...(defaultSchema.protocols ?? undefined),
             // Email bodies often embed images as data URLs. We allow `data:` here,
             // but still validate the MIME type in `sanitizeDangerousUrls`.
-            src: [...defaultSrcProtocols, 'data'],
+            src: [...defaultSrcProtocols, 'http', 'https', 'data'],
         },
         attributes: {
             ...defaultSchema.attributes,
@@ -75,6 +75,9 @@ function getEmailSanitizationSchema(): Schema {
                 'className',
                 'class', // Keep for completeness
                 'id', // Allow id for anchors/internal navigation
+                // Used to store remote image URLs without loading them immediately.
+                'data-remote-src',
+                'dataRemoteSrc',
             ],
         },
         // Allow common email-specific tags
@@ -120,6 +123,17 @@ function sanitizeDangerousUrls(node: any) {
     const safeSrc = getSafeEmailImageSrc(src);
     if (safeSrc) {
         node.properties.src = safeSrc;
+        delete node.properties['data-remote-src'];
+        delete node.properties.dataRemoteSrc;
+        return;
+    }
+
+    const remoteSrc = getRemoteEmailImageSrc(src);
+    if (remoteSrc) {
+        // Avoid loading remote images by default. Store the URL so the viewer can
+        // opt-in and restore it later.
+        node.properties['data-remote-src'] = remoteSrc;
+        delete node.properties.src;
         return;
     }
 
@@ -168,6 +182,20 @@ function getSafeEmailImageSrc(src: string): string | undefined {
     }
 
     return trimmedSrc;
+}
+
+/**
+ * Returns a safe remote image URL to keep for later opt-in loading.
+ *
+ * @param src - The raw `src` attribute value.
+ * @returns The remote URL if it is http/https.
+ */
+function getRemoteEmailImageSrc(src: string): string | undefined {
+    const trimmedSrc = src.trim();
+    const lower = trimmedSrc.toLowerCase();
+    if (lower.startsWith('http://') || lower.startsWith('https://')) {
+        return trimmedSrc;
+    }
 }
 
 /**

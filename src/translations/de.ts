@@ -49,6 +49,14 @@ export default {
     'file-viewer.email.date': 'Datum',
     'file-viewer.email.attachments': 'Anhänge',
     'file-viewer.email.attachment.unnamed': 'Unbenannter Anhang',
+    'file-viewer.email.remote-images.warning':
+        'Bilder werden nicht geladen, um Ihre Privatsphäre zu schützen.',
+    'file-viewer.email.remote-images.warning.description': `Viele E-Mails enthalten Bilder, die auf externen Servern gehostet werden.
+Wenn Bilder geladen werden, fordert Ihr Gerät sie vom Server des Absenders an.
+Dadurch kann der Absender erfahren, dass Sie die Nachricht geöffnet haben, wann Sie sie geöffnet haben, sowie Metadaten wie Ihre IP-Adresse und Informationen zu Gerät/Browser.
+
+Sie können Bilder weiterhin blockieren (die E-Mail kann unvollständig aussehen) oder sie laden, wenn Sie dem Absender vertrauen.`,
+    'file-viewer.email.remote-images.load': 'Bilder laden',
     'editor-menu.bold': 'Fett',
     'editor-menu.italic': 'Kursiv',
     'editor-menu.strikethrough': 'Durchgestrichen',

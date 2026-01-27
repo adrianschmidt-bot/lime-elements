@@ -49,6 +49,14 @@ export default {
     'file-viewer.email.date': 'Päiväys',
     'file-viewer.email.attachments': 'Liitteet',
     'file-viewer.email.attachment.unnamed': 'Nimetön liite',
+    'file-viewer.email.remote-images.warning':
+        'Kuvia ei ladata yksityisyytesi suojaamiseksi.',
+    'file-viewer.email.remote-images.warning.description': `Monet sähköpostit sisältävät kuvia, jotka sijaitsevat ulkoisilla palvelimilla.
+Kun kuvat ladataan, laitteesi pyytää ne lähettäjän palvelimelta.
+Tämä voi paljastaa lähettäjälle, että avasit viestin, milloin avasit sen, sekä metatietoja, kuten IP-osoitteesi ja tiedot laitteesta/selaimesta.
+
+Voit pitää kuvat estettyinä (sähköposti voi näyttää puutteelliselta) tai ladata ne, jos luotat lähettäjään.`,
+    'file-viewer.email.remote-images.load': 'Lataa kuvat',
     'editor-menu.bold': 'Lihavoitu',
     'editor-menu.italic': 'Kursivoitu',
     'editor-menu.strikethrough': 'Yliviivaus',

@@ -177,6 +177,7 @@ export class DatePicker {
         this.onInputClick = this.onInputClick.bind(this);
         this.nativeChangeHandler = this.nativeChangeHandler.bind(this);
         this.handleNativeBlur = this.handleNativeBlur.bind(this);
+        this.handleCalendarBlur = this.handleCalendarBlur.bind(this);
         this.preventBlurFromCalendarContainer =
             this.preventBlurFromCalendarContainer.bind(this);
     }
@@ -241,7 +242,7 @@ export class DatePicker {
                     required={this.required}
                     value={this.value ? formatter(this.value) : ''}
                     onFocus={this.showCalendar}
-                    onBlur={this.hideCalendar}
+                    onBlur={this.handleCalendarBlur}
                     onClick={this.onInputClick}
                     onChange={this.handleInputElementChange}
                     ref={(el) => (this.textField = el)}
@@ -294,6 +295,11 @@ export class DatePicker {
         this.hasInteracted = true;
     }
 
+    private handleCalendarBlur() {
+        this.hasInteracted = true;
+        this.hideCalendar();
+    }
+
     private showCalendar(event) {
         this.showPortal = true;
         const inputElement = this.textField.shadowRoot.querySelector('input');
@@ -327,7 +333,6 @@ export class DatePicker {
     }
 
     private hideCalendar() {
-        this.hasInteracted = true;
         setTimeout(() => {
             this.showPortal = false;
         });
@@ -359,6 +364,7 @@ export class DatePicker {
 
         const element = document.querySelector(`#${this.portalId}`);
         if (!element.contains(event.target as Node)) {
+            this.hasInteracted = true;
             this.hideCalendar();
         }
     };
@@ -366,6 +372,7 @@ export class DatePicker {
     private handleCalendarChange(event) {
         const date = event.detail;
         event.stopPropagation();
+        this.hasInteracted = true;
         if (this.pickerIsAutoClosing()) {
             this.hideCalendar();
         }

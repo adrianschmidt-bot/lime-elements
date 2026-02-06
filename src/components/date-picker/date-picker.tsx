@@ -194,7 +194,7 @@ export class DatePicker {
             onAction: this.clearValue,
         };
 
-        if (this.value && !this.readonly) {
+        if (this.value && !this.readonly && !this.disabled) {
             inputProps.trailingIcon = 'clear_symbol';
         }
 
@@ -283,6 +283,8 @@ export class DatePicker {
 
     private showCalendar(event) {
         if (this.disabled || this.readonly) {
+            event.stopPropagation();
+
             return;
         }
         this.showPortal = true;

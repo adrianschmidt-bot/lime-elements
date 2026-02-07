@@ -1,6 +1,15 @@
 import React from 'react';
-import { FieldProps, ErrorSchema } from '@rjsf/core';
+import { FieldProps } from '@rjsf/core';
 import { isEmpty } from 'lodash-es';
+
+/**
+ * Represents a nested error schema structure from rjsf validation.
+ * Each level can contain __errors array and nested child schemas.
+ */
+interface ErrorSchemaNode {
+    __errors?: string[];
+    [key: string]: ErrorSchemaNode | string[] | undefined;
+}
 
 /**
  * Recursively finds the first error message in a potentially nested errorSchema.
@@ -9,7 +18,7 @@ import { isEmpty } from 'lodash-es';
  * @param schema - The error schema to search for errors
  * @returns The first error message found, or undefined if no errors
  */
-function findFirstError(schema: ErrorSchema): string | undefined {
+function findFirstError(schema: ErrorSchemaNode): string | undefined {
     if (!schema || typeof schema !== 'object') {
         return undefined;
     }
@@ -28,7 +37,7 @@ function findFirstError(schema: ErrorSchema): string | undefined {
 
         const nested = schema[key];
         if (nested && typeof nested === 'object') {
-            const found = findFirstError(nested as ErrorSchema);
+            const found = findFirstError(nested as ErrorSchemaNode);
             if (found) {
                 return found;
             }

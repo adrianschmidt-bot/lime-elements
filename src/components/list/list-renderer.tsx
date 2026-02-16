@@ -153,6 +153,7 @@ export class ListRenderer {
                 type={itemType}
                 text={item.text}
                 secondaryText={item.secondaryText}
+                assistiveText={item.assistiveText}
                 icon={item.icon}
                 image={item.image}
                 primaryComponent={item.primaryComponent}

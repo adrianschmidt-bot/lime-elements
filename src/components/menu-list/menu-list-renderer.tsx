@@ -137,6 +137,7 @@ export class MenuListRenderer {
                 type="menuitem"
                 text={item.text}
                 secondaryText={item.secondaryText}
+                assistiveText={item.assistiveText}
                 icon={item.icon}
                 primaryComponent={primaryComponent as any}
                 badgeIcon={this.config.badgeIcons}
